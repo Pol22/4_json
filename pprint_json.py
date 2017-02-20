@@ -11,12 +11,13 @@ def load_json_data(filepath):
 
 
 def pretty_print(data, number_tabs):
-    value_type = type(data)
-    if value_type == type(1) or value_type == type(1.1):
+    if isinstance(data, int) or isinstance(data, float):
         print(data, end='', sep='')
-    if value_type == type(''):
+
+    if isinstance(data, str):
         print("\""+data+"\"", end='', sep='')
-    if value_type == type({}):
+
+    if isinstance(data, dict):
         print('{')
         dict_keys = sorted(data.keys())
         for key in dict_keys:
@@ -31,7 +32,7 @@ def pretty_print(data, number_tabs):
         print('\t'*(number_tabs-1), end='')
         print('}', end='')
 
-    if value_type == type([]):
+    if isinstance(data, list):
         print('[')
         for item in data:
             print('\t'*number_tabs, end='')
@@ -42,11 +43,6 @@ def pretty_print(data, number_tabs):
                 print(',')
         print('\t'*(number_tabs-1), end='')
         print(']', end='')
-        
-
-def pretty_print_json(data):
-    number_tabs = 1
-    pretty_print(data, number_tabs)
 
 
 if __name__ == '__main__':
@@ -61,4 +57,4 @@ if __name__ == '__main__':
 
     json_content = load_json_data(filepath)
 
-    pretty_print_json(json_content)
+    pretty_print(json_content, 1)
