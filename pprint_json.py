@@ -10,40 +10,43 @@ def load_json_data(filepath):
         return json.load(file_handler)
 
 
-# 0 = first, 1 = last
-def pretty_print_json(data, number_of_tabs, first_or_last):
+def pretty_print(data, number_tabs):
+    value_type = type(data)
+    if value_type == type(1) or value_type == type(1.1):
+        print(data, end='', sep='')
+    if value_type == type(''):
+        print("\""+data+"\"", end='', sep='')
+    if value_type == type({}):
+        print('{')
+        dict_keys = sorted(data.keys())
+        for key in dict_keys:
+            print('\t'*number_tabs, end='')
+            pretty_print(key, number_tabs+1)
+            print(': ', end='')
+            pretty_print(data[key], number_tabs+1)
+            if key == dict_keys[-1]:
+                print('')
+            else:
+                print(',')
+        print('\t'*(number_tabs-1), end='')
+        print('}', end='')
 
-    if isinstance(data, list):
+    if value_type == type([]):
         print('[')
         for item in data:
-            pretty_print_json(item, number_of_tabs + 1, 1)
-            if item != data[len(data)-1]:
-                print(',')
+            print('\t'*number_tabs, end='')
+            pretty_print(item, number_tabs+1)
+            if item == data[-1]:
+                print('')
             else:
-                print()
-        print('\t' * (number_of_tabs - 1), ']', end='', sep='')
-    elif isinstance(data, dict):
-        if first_or_last:
-            print('\t' * number_of_tabs, '{')
-        else:
-            print('{')
-        keys = list(data.keys())
-        keys.sort()
-        number_of_tabs += 1
-        for item in keys:
-            print('\t' * number_of_tabs, '"', item, '"', ': ', sep='', end='')
-            pretty_print_json(data[item], number_of_tabs + 1, 0)
-            if item != keys[len(keys)-1]:
                 print(',')
-            else:
-                print('\t' * -1)
-        print('\t' * (number_of_tabs - 1), '}', end='')
-    elif isinstance(data, str):
-        print('"', data, '"', end='', sep='')
-    elif data is None or isinstance(data, int):
-        print(data, end='', sep='')
-    else:
-        print('\t' * number_of_tabs, data, end='', sep='')
+        print('\t'*(number_tabs-1), end='')
+        print(']', end='')
+        
+
+def pretty_print_json(data):
+    number_tabs = 1
+    pretty_print(data, number_tabs)
 
 
 if __name__ == '__main__':
@@ -51,8 +54,11 @@ if __name__ == '__main__':
         print("Input path to the json file second argument")
         exit()
     filepath = sys.argv[1]
+
     if not os.path.exists(filepath):
         print("Incorrect path")
         exit()
+
     json_content = load_json_data(filepath)
-    pretty_print_json(json_content, 0, 1)
+
+    pretty_print_json(json_content)
