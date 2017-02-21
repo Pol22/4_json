@@ -5,7 +5,8 @@ import argparse
 
 def load_json_data(filepath):
     if not os.path.exists(filepath):
-        return None
+        print("Incorrect path")
+        exit(-1)
 
     with open(filepath, 'r', encoding='utf8') as file_handler:
         return json.load(file_handler)
@@ -70,12 +71,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     filepath = args.filepath[0]
 
-    if not os.path.exists(filepath):
-        print("Incorrect path")
-        exit(-1)
-
     json_content = load_json_data(filepath)
-
     pretty_json = get_pretty_json(json_content, 1)
 
     print(pretty_json)
